@@ -1,4 +1,5 @@
-import { warn } from '../utils/Console';
+import { addLineNumbers } from '../math/Utils';
+import { log, warn } from '../utils/Console';
 import * as GL from './GL';
 
 let gl: WebGL2RenderingContext | WebGLRenderingContext;
@@ -80,8 +81,9 @@ export default class Program {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      warn('Failed to compile shader:');
+      warn(`Failed to compile '${type}' shader:`);
       warn(gl.getShaderInfoLog(shader));
+      warn(addLineNumbers(source));
       return false;
     }
 

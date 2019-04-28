@@ -132,3 +132,11 @@ export function isPowerOf2(value) {
 export function nearestPowerOf2(size) {
   return Math.pow(2, Math.round(Math.log(size) / Math.log(2)));
 }
+
+export function addLineNumbers(text: string) {
+  let result = '';
+  text.split('\n').forEach((line: string, index: number) => {
+    result += `${index < 10 ? `0${index}` : index}| ${line}\n`;
+  });
+  return result;
+}

@@ -192,7 +192,7 @@ const shaderProjection = new Material({
     uniform mat4 uTextureProjectionMatrix;
     uniform mat4 uCameraMatrix;
     uniform mat4 uCameraProjection;
-    ${GL.webgl2 ? 'out' : 'varying'} vec4 vShadowCoord;
+    out vec4 vShadowCoord;
     const mat4 biasMatrix = mat4( 0.5, 0.0, 0.0, 0.0,
                                   0.0, 0.5, 0.0, 0.0,
                                   0.0, 0.0, 0.5, 0.0,
@@ -207,14 +207,12 @@ const shaderProjection = new Material({
 `,
   hookFragmentPre: `
     uniform sampler2D uProjectiveTexture;
-    ${GL.webgl2 ? 'in' : 'varying'} vec4 vShadowCoord;
+    in vec4 vShadowCoord;
 `,
   hookFragmentEnd: `
     vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
     const float shadowBias = 0.00005;
-    vec4 texel = ${GL.webgl2
-      ? 'textureProj'
-      : 'texture2DProj'}(uProjectiveTexture, shadowCoord, shadowBias);
+    vec4 texel = textureProj(uProjectiveTexture, shadowCoord, shadowBias);
     outgoingColor.a = 1.0 - texel.r;
 `
 });

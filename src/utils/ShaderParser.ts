@@ -1,13 +1,9 @@
 import * as GL from '../core/GL';
 import EsVersion from '../shaders/chunks/EsVersion.glsl';
 
-const WORD_REGX = word => {
-  return new RegExp(`\\b${word}\\b`, 'gi');
-};
+const WORD_REGX = word => new RegExp(`\\b${word}\\b`, 'gi');
 
-const LINE_REGX = word => {
-  return new RegExp(`${word}`, 'gi');
-};
+const LINE_REGX = word => new RegExp(`${word}`, 'gi');
 
 const VERTEX = [
   {
@@ -31,6 +27,10 @@ const FRAGMENT = [
   {
     match: WORD_REGX('outgoingColor'),
     replace: 'gl_FragColor'
+  },
+  {
+    match: WORD_REGX('textureProj'),
+    replace: 'texture2DProj'
   },
   {
     match: WORD_REGX('texture'),
@@ -59,7 +59,11 @@ const FRAGMENT = [
           const uniformName = match.replace('texture(', '').split(',')[0];
           // Find the uniform definition
           let uniformType = shader.match(`(.*?) ${uniformName}`, 'i')[1];
+          // Remove whitespace at the start
+          uniformType = uniformType.replace(/^\s+/g, '');
+          // Get the sampler type
           uniformType = uniformType.split(' ')[1];
+
           switch (uniformType) {
             case 'sampler2D': {
               replacement = 'texture2D';
